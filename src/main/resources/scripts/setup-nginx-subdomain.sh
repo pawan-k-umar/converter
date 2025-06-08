@@ -27,7 +27,14 @@ else
 fi
 
 # 2. Append new server block to existing config
-cat <<EOF | sudo tee -a "$CONFIG_PATH" > /dev/null
+cat <<EOF >> "/etc/nginx/sites-available/$DOMAIN"
+
+# Added subdomain config
+server {
+    listen 80;
+    server_name $FULL_DOMAIN;
+    return 301 https://\$host\$request_uri;
+}
 
 server {
     listen 443 ssl;
