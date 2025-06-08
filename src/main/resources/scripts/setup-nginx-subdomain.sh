@@ -1,4 +1,5 @@
 #!/bin/bash
+
 SUBDOMAIN="$1"
 PORT="$2"
 EMAIL="$3"
@@ -7,15 +8,22 @@ FULL_DOMAIN="$SUBDOMAIN.$DOMAIN"
 
 echo "➡️ Setting up $FULL_DOMAIN -> http://localhost:$PORT"
 
-# Issue certificate if doesn't exist
-if [ ! -f "/etc/letsencrypt/live/$FULL_DOMAIN/fullchain.pem" ]; then
-  certbot --nginx -d "$FULL_DOMAIN" --non-interactive --agree-tos -m "$EMAIL" --redirect
+# Check if cert already exists
+CERT_PATH="/etc/letsencrypt/live/$FULL_DOMAIN/fullchain.pem"
+if [ ! -f "$CERT_PATH" ]; then
+  echo "🔐 Requesting SSL certificate for $FULL_DOMAIN"
+  sudo certbot --nginx -d "$FULL_DOMAIN" --non-interactive --agree-tos -m "$EMAIL" --redirect
+  if [ $? -ne 0 ]; then
+    echo "❌ Failed to obtain SSL certificate for $FULL_DOMAIN"
+    exit 1
+  fi
 else
-  echo "✅ Certificate for $FULL_DOMAIN already exists."
+  echo "✅ Certificate already exists for $FULL_DOMAIN"
 fi
 
-# Write nginx config
-cat <<EOF > "/etc/nginx/sites-available/$FULL_DOMAIN"
+# Nginx config
+NGINX_CONF="/etc/nginx/sites-available/$FULL_DOMAIN"
+cat <<EOF | sudo tee "$NGINX_CONF" > /dev/null
 server {
     listen 80;
     server_name $FULL_DOMAIN;
@@ -39,8 +47,8 @@ server {
 }
 EOF
 
-ln -sf "/etc/nginx/sites-available/$FULL_DOMAIN" "/etc/nginx/sites-enabled/$FULL_DOMAIN"
+# Enable site and reload
+sudo ln -sf "$NGINX_CONF" "/etc/nginx/sites-enabled/$FULL_DOMAIN"
+sudo nginx -t && sudo systemctl reload nginx
 
-# Reload nginx
-nginx -t && systemctl reload nginx
 echo "🎉 $FULL_DOMAIN is now live and proxied to port $PORT"
