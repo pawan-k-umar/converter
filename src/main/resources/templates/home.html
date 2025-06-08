@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Universal Unit Converter</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #e3f2fd, #ffffff);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #1e88e5;
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+
+        main {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .card h2 {
+            color: #1976d2;
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            color: #555;
+        }
+
+        ul {
+            text-align: left;
+            margin-bottom: 1.5rem;
+            color: #444;
+        }
+
+        ul li {
+            margin: 0.5rem 0;
+        }
+
+        button {
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #1565c0;
+        }
+
+        footer {
+            background: #f4f4f4;
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Universal Unit Converter</h1>
+    <p>Convert length, weight, temperature, and more with ease</p>
+</header>
+
+<main>
+    <div class="card">
+        <h2>Start Converting</h2>
+        <p>Instantly convert values across multiple unit types:</p>
+        <ul>
+            <li><strong>Length</strong>: meters, inches, feet, kilometers</li>
+            <li><strong>Weight</strong>: kilograms, pounds, grams</li>
+            <li><strong>Temperature</strong>: Celsius, Fahrenheit, Kelvin</li>
+            <li><strong>Time</strong>: seconds, minutes, hours</li>
+            <li><strong>Area</strong>: square meters, acres, hectares</li>
+        </ul>
+        <form method="get">
+            <button type="submit">Launch Converter</button>
+        </form>
+    </div>
+</main>
+
+<footer>
+    &copy; 2025 UnitMaster. All rights reserved.
+</footer>
+
+</body>
+</html>
