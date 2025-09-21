@@ -1,21 +1,25 @@
 #!/bin/bash
+
 SUBDOMAIN="$1"
 PORT="$2"
 EMAIL="$3"
 DOMAIN="kpawan.com"
 FULL_DOMAIN="$SUBDOMAIN.$DOMAIN"
+CONFIG_PATH="/etc/nginx/sites-available/$FULL_DOMAIN.conf"
 
-echo "➡️ Setting up $FULL_DOMAIN -> http://localhost:$PORT"
+echo "➡️ Creating Nginx config for $FULL_DOMAIN on port $PORT"
 
-# Issue certificate if doesn't exist
+# 1. Generate SSL Certificate (if not already)
 if [ ! -f "/etc/letsencrypt/live/$FULL_DOMAIN/fullchain.pem" ]; then
-  certbot --nginx -d "$FULL_DOMAIN" --non-interactive --agree-tos -m "$EMAIL" --redirect
+    echo "🔐 Generating SSL certificate for $FULL_DOMAIN"
+    certbot certonly --nginx -d "$FULL_DOMAIN" --non-interactive --agree-tos -m "$EMAIL"
 else
-  echo "✅ Certificate for $FULL_DOMAIN already exists."
+    echo "✅ SSL certificate for $FULL_DOMAIN already exists"
 fi
 
-# Write nginx config
-cat <<EOF > "/etc/nginx/sites-available/$FULL_DOMAIN"
+# 2. Write new Nginx config file
+echo "🌐 Writing Nginx config to $CONFIG_PATH"
+cat <<EOF > "$CONFIG_PATH"
 server {
     listen 80;
     server_name $FULL_DOMAIN;
@@ -39,8 +43,11 @@ server {
 }
 EOF
 
-ln -sf "/etc/nginx/sites-available/$FULL_DOMAIN" "/etc/nginx/sites-enabled/$FULL_DOMAIN"
+# 3. Enable the site
+ln -sf "$CONFIG_PATH" "/etc/nginx/sites-enabled/$FULL_DOMAIN.conf"
 
-# Reload nginx
+# 4. Test and reload Nginx
+echo "🔄 Reloading Nginx"
 nginx -t && systemctl reload nginx
-echo "🎉 $FULL_DOMAIN is now live and proxied to port $PORT"
+
+echo "🎉 $FULL_DOMAIN is now live and reverse-proxied to http://127.0.0.1:$PORT"

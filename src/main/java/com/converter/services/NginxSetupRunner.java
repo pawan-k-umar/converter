@@ -37,8 +37,8 @@ public class NginxSetupRunner {
         // Run script with parameters
         String fullSubdomain = subdomain + ".kpawan.com";
         ProcessBuilder builder = new ProcessBuilder(
-                "sudo", "bash", tempScript.getAbsolutePath(),
-                fullSubdomain, appPort, email
+                "bash", tempScript.getAbsolutePath(),
+                subdomain, appPort, email
         );
         builder.redirectErrorStream(true);
         Process process = builder.start();
@@ -58,5 +58,5 @@ public class NginxSetupRunner {
 
         System.out.println("✅ Nginx + SSL ready for: " + fullSubdomain);
     }
-    
+
 }
